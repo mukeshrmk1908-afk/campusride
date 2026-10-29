@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f8f8f4">
+  <title>CampusRide — Better trips, together</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #17241d;
+      --muted: #718077;
+      --green: #1d5b3e;
+      --green-dark: #174832;
+      --lime: #d7f06a;
+      --cream: #f8f8f4;
+      --line: #e8ebe4;
+      --white: #fff;
+      --shadow: 0 18px 55px rgba(28, 54, 37, .09);
+      font-family: "DM Sans", sans-serif;
+      color: var(--ink);
+      background: var(--cream);
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; min-width: 320px; }
+    button, input, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1160px, calc(100% - 48px)); margin: 0 auto; }
+
+    .topbar { height: 82px; display: flex; align-items: center; }
+    .nav { display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: inline-flex; gap: 10px; align-items: center; font: 800 21px "Manrope", sans-serif; letter-spacing: -1px; }
+    .brand-mark { width: 35px; height: 35px; display: grid; place-items: center; border-radius: 12px; color: white; background: var(--green); }
+    .brand-mark svg { width: 20px; }
+    .nav-links { display: flex; gap: 34px; margin-left: 90px; color: #536158; font-size: 14px; font-weight: 600; }
+    .nav-links a:hover { color: var(--green); }
+    .nav-actions { display: flex; align-items: center; gap: 18px; font-size: 14px; font-weight: 700; }
+    .text-link:hover { color: var(--green); }
+    .button { border: 0; border-radius: 10px; padding: 13px 20px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--green); color: white; font-weight: 700; cursor: pointer; transition: .2s ease; }
+    .button:hover { background: var(--green-dark); transform: translateY(-1px); }
+    .button-outline { border: 1px solid #dfe5dc; background: transparent; color: var(--ink); }
+    .button-outline:hover { background: white; color: var(--green); }
+    .button-lime { background: var(--lime); color: var(--ink); }
+    .button-lime:hover { background: #c9e355; }
+
+    .hero { position: relative; overflow: hidden; padding: 64px 0 76px; }
+    .hero::before { content: ""; position: absolute; width: 580px; height: 580px; right: -112px; top: -165px; border-radius: 50%; background: #eef2e7; z-index: -1; }
+    .hero-grid { display: grid; grid-template-columns: 1.02fr .98fr; align-items: center; gap: 42px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 99px; background: #eaf0e7; color: var(--green); font-size: 12px; font-weight: 700; letter-spacing: .2px; }
+    .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: #6baa54; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 580px; margin: 19px 0 18px; font: 800 clamp(43px, 5.2vw, 66px)/1.07 "Manrope", sans-serif; letter-spacing: -3.4px; }
+    h1 span { color: var(--green); }
+    .hero-copy { max-width: 470px; color: #657369; font-size: 16px; line-height: 1.75; }
+    .hero-buttons { display: flex; gap: 12px; margin: 27px 0 29px; }
+    .hero-buttons .button { padding: 14px 19px; }
+    .social-proof { display: flex; align-items: center; gap: 13px; color: #68756c; font-size: 12px; font-weight: 600; }
+    .avatars { display: flex; padding-left: 5px; }
+    .avatar { width: 28px; height: 28px; display: grid; place-items: center; margin-left: -5px; border: 2px solid var(--cream); border-radius: 50%; background: #e0b69d; font-size: 13px; }
+    .avatar:nth-child(2) { background: #b7c8a9; }
+    .avatar:nth-child(3) { background: #d7c69a; }
+    .avatar:nth-child(4) { background: #c9b8d6; }
+    .stars { color: #e3a72d; letter-spacing: 1px; font-size: 13px; }
+
+    .visual { position: relative; min-height: 410px; display: grid; place-items: center; }
+    .visual-bg { position: absolute; width: 400px; height: 400px; border-radius: 48% 52% 42% 58% / 49% 45% 55% 51%; background: #dfe8d5; transform: rotate(-12deg); }
+    .visual-image { position: relative; width: min(100%, 465px); height: 352px; overflow: hidden; border: 8px solid white; border-radius: 26px; box-shadow: var(--shadow); background: #b8c2ad; transform: rotate(2deg); }
+    .visual-image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .float-card { position: absolute; display: flex; align-items: center; gap: 11px; padding: 13px 16px; border: 1px solid #edf0ea; border-radius: 14px; background: white; box-shadow: 0 10px 32px #263e2b1c; }
+    .float-card.trip { right: -14px; bottom: 42px; }
+    .float-card.people { top: 42px; left: -5px; }
+    .float-icon { width: 37px; height: 37px; display: grid; place-items: center; border-radius: 11px; background: #eef4e8; color: var(--green); }
+    .float-icon svg { width: 19px; height: 19px; }
+    .float-card strong { display: block; font-size: 12px; }
+    .float-card small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+
+    .search-section { position: relative; z-index: 2; margin-top: -28px; }
+    .search-card { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 0; align-items: center; padding: 16px; border: 1px solid #edf0e9; border-radius: 16px; background: white; box-shadow: var(--shadow); }
+    .search-field { display: flex; align-items: center; gap: 11px; min-height: 52px; padding: 0 20px; border-right: 1px solid var(--line); }
+    .search-field svg { width: 19px; flex: 0 0 auto; color: #668271; }
+    .field-content { min-width: 0; width: 100%; }
+    .field-content label { display: block; margin-bottom: 4px; color: #89938b; font-size: 10px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; }
+    .field-content input { width: 100%; padding: 0; border: 0; outline: 0; color: var(--ink); background: transparent; font-size: 13px; font-weight: 600; }
+    .field-content input::placeholder { color: #a7afa8; font-weight: 500; }
+    .search-card .button { height: 52px; padding: 0 24px; }
+
+    .section { padding: 100px 0 92px; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 28px; }
+    .section-kicker { display: block; margin-bottom: 9px; color: var(--green); font-size: 11px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; }
+    h2 { margin-bottom: 8px; font: 800 35px/1.2 "Manrope", sans-serif; letter-spacing: -1.5px; }
+    .section-head p { margin: 0; color: var(--muted); font-size: 14px; }
+    .view-all { color: var(--green); font-size: 13px; font-weight: 700; }
+    .ride-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .ride-card { padding: 22px; border: 1px solid #e9ede6; border-radius: 15px; background: white; transition: .2s ease; }
+    .ride-card:hover { border-color: #cad7c7; transform: translateY(-3px); box-shadow: 0 14px 35px #263e2b0d; }
+    .ride-top { display: flex; align-items: center; justify-content: space-between; }
+    .ride-date { color: #718078; font-size: 11px; font-weight: 700; }
+    .seats { padding: 6px 9px; border-radius: 99px; color: var(--green); background: #edf4e9; font-size: 10px; font-weight: 700; }
+    .route { display: grid; grid-template-columns: 16px 1fr auto; gap: 9px; align-items: stretch; margin: 22px 0; }
+    .route-dots { display: flex; flex-direction: column; align-items: center; padding: 4px 0; }
+    .route-dot { width: 8px; height: 8px; border: 2px solid var(--green); border-radius: 50%; }
+    .route-dot.end { border-color: #d1a13d; }
+    .route-line { width: 1px; min-height: 29px; flex: 1; background: #dce5d8; }
+    .route-places { display: flex; flex-direction: column; justify-content: space-between; gap: 19px; }
+    .route-places strong { font-size: 13px; }
+    .route-times { display: flex; flex-direction: column; justify-content: space-between; gap: 19px; color: var(--muted); font-size: 11px; text-align: right; }
+    .ride-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 15px; border-top: 1px solid #eff1ed; }
+    .driver { display: flex; align-items: center; gap: 9px; }
+    .driver-avatar { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; background: #e5c7b2; font-size: 14px; }
+    .driver strong { display: block; font-size: 11px; }
+    .driver small { display: block; margin-top: 2px; color: #879188; font-size: 10px; }
+    .price { color: var(--green); font: 800 19px "Manrope", sans-serif; }
+    .price small { display: block; margin-top: 1px; color: #96a098; font: 500 9px "DM Sans", sans-serif; text-align: right; }
+    .no-results { grid-column: 1/-1; padding: 34px; border: 1px dashed #d6dfd3; border-radius: 14px; color: var(--muted); text-align: center; }
+
+    .benefits { padding: 78px 0; background: #eef2e9; }
+    .benefits-head { max-width: 530px; margin: 0 auto 38px; text-align: center; }
+    .benefits-head p { margin-bottom: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .benefit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+    .benefit { padding: 5px 17px; text-align: center; }
+    .benefit-icon { width: 52px; height: 52px; display: grid; place-items: center; margin: 0 auto 16px; border-radius: 16px; color: var(--green); background: white; }
+    .benefit-icon svg { width: 23px; }
+    .benefit h3 { margin-bottom: 7px; font: 700 16px "Manrope", sans-serif; }
+    .benefit p { max-width: 270px; margin: 0 auto; color: #758178; font-size: 12px; line-height: 1.7; }
+
+    .cta { padding: 76px 0; }
+    .cta-box { position: relative; display: flex; align-items: center; justify-content: space-between; overflow: hidden; padding: 47px 54px; border-radius: 22px; color: white; background: var(--green); }
+    .cta-box::after { content: ""; position: absolute; width: 310px; height: 310px; top: -190px; right: 190px; border: 1px solid #ffffff20; border-radius: 50%; box-shadow: 0 0 0 35px #ffffff0b, 0 0 0 70px #ffffff08; }
+    .cta-box h2 { max-width: 460px; margin-bottom: 8px; color: white; font-size: 32px; }
+    .cta-box p { margin: 0; color: #ccdbd0; font-size: 14px; }
+    .cta-box .button { position: relative; z-index: 1; white-space: nowrap; }
+
+    footer { padding: 27px 0; border-top: 1px solid #e8ebe4; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; }
+    .footer-inner .brand { font-size: 17px; }
+    .footer-inner .brand-mark { width: 29px; height: 29px; border-radius: 9px; }
+    .footer-note { color: #8a948c; font-size: 11px; }
+    .footer-links { display: flex; gap: 21px; color: #68756c; font-size: 11px; font-weight: 600; }
+    .toast { position: fixed; right: 24px; bottom: 24px; z-index: 10; max-width: min(390px, calc(100% - 48px)); padding: 15px 19px; border-radius: 12px; color: white; background: var(--ink); box-shadow: var(--shadow); font-size: 13px; line-height: 1.5; opacity: 0; pointer-events: none; transform: translateY(10px); transition: .25s ease; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    dialog { width: min(470px, calc(100% - 32px)); padding: 0; border: 0; border-radius: 18px; box-shadow: 0 25px 100px #101f1680; }
+    dialog::backdrop { background: #13251a9c; backdrop-filter: blur(3px); }
+    .modal { padding: 27px; }
+    .modal-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+    .modal-head h2 { margin-bottom: 5px; font-size: 24px; }
+    .modal-head p { margin: 0; color: var(--muted); font-size: 13px; }
+    .close-modal { border: 0; padding: 6px; border-radius: 8px; color: #67746a; background: #f1f3ef; cursor: pointer; }
+    .modal-form { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+    .modal-form label { display: block; margin-bottom: 6px; color: #536158; font-size: 11px; font-weight: 700; }
+    .modal-form input { width: 100%; padding: 12px; border: 1px solid #e1e7de; border-radius: 9px; outline: 0; font-size: 13px; }
+    .modal-form input:focus { border-color: #7ea387; box-shadow: 0 0 0 3px #1d5b3e12; }
+    .modal-form .full { grid-column: 1/-1; }
+    .modal-form button { width: 100%; margin-top: 4px; }
+
+    @media (max-width: 850px) {
+      .nav-links { margin-left: 0; gap: 18px; }
+      .hero-grid { gap: 20px; }
+      .visual { min-height: 340px; }
+      .visual-bg { width: 315px; height: 315px; }
+      .visual-image { height: 285px; }
+      .float-card.trip { right: -5px; }
+      .search-card { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .search-field { border: 1px solid var(--line); border-radius: 9px; }
+      .search-card .button { width: 100%; }
+      .ride-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 34px, 500px); }
+      .topbar { height: 70px; }
+      .nav-links, .nav-actions .text-link { display: none; }
+      .nav-actions { gap: 0; }
+      .nav-actions .button { padding: 11px 14px; font-size: 12px; }
+      .hero { padding: 40px 0 42px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 4px; }
+      h1 { max-width: 470px; font-size: 48px; letter-spacing: -2.7px; }
+      .hero-copy { font-size: 14px; }
+      .hero-buttons { margin: 20px 0 22px; }
+      .visual { min-height: 295px; margin: 0 -4px; }
+      .visual-bg { width: 275px; height: 275px; }
+      .visual-image { width: 88%; height: 240px; border-width: 6px; }
+      .float-card.people { top: 28px; left: 0; }
+      .float-card.trip { right: -2px; bottom: 28px; }
+      .search-section { margin-top: 0; }
+      .search-card { grid-template-columns: 1fr; padding: 12px; }
+      .search-field { min-height: 51px; }
+      .section { padding: 72px 0 66px; }
+      .section-head { align-items: flex-start; gap: 15px; }
+      h2 { font-size: 29px; }
+      .section-head p { line-height: 1.5; }
+      .section-head .view-all { margin-top: 7px; white-space: nowrap; }
+      .ride-grid { grid-template-columns: 1fr; gap: 12px; }
+      .benefits { padding: 62px 0; }
+      .benefit-grid { grid-template-columns: 1fr; gap: 30px; }
+      .cta { padding: 55px 0; }
+      .cta-box { align-items: flex-start; flex-direction: column; gap: 24px; padding: 32px 25px; }
+      .cta-box h2 { font-size: 28px; }
+      .footer-inner { align-items: flex-start; flex-wrap: wrap; gap: 17px; }
+      .footer-note { order: 3; width: 100%; }
+      .footer-links { gap: 13px; }
+      .modal-form { grid-template-columns: 1fr; }
+      .modal-form .full { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="#" aria-label="CampusRide home">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14l1.5-6.5a2 2 0 0 0-2-2.5H5.5a2 2 0 0 0-2 2.5L5 17Z"/><path d="M6 17v2m12-2v2M4 13h16M7 8l1-3h8l1 3"/><circle cx="7.5" cy="14" r=".7" fill="currentColor"/><circle cx="16.5" cy="14" r=".7" fill="currentColor"/></svg></span>
+        CampusRide
+      </a>
+      <div class="nav-links">
+        <a href="#rides">Find a ride</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#community">Our community</a>
+      </div>
+      <div class="nav-actions">
+        <a class="text-link" href="#rides">Log in</a>
+        <button class="button" type="button" data-open-offer>Offer a ride <span aria-hidden="true">↗</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-dot"></span> Your campus. Your people. Your ride.</div>
+          <h1>Good rides.<br><span>Great company.</span></h1>
+          <p class="hero-copy">The easiest way to get around campus. Share a ride with fellow students, split the cost, and make the journey part of the day.</p>
+          <div class="hero-buttons">
+            <a class="button" href="#search">Find your ride <span aria-hidden="true">→</span></a>
+            <button class="button button-outline" type="button" data-open-offer>I'm driving</button>
+          </div>
+          <div class="social-proof">
+            <div class="avatars" aria-hidden="true"><span class="avatar">👩🏽</span><span class="avatar">👨🏻</span><span class="avatar">👩🏼</span><span class="avatar">👨🏾</span></div>
+            <span><span class="stars">★★★★★</span><br>Campus community, moving together</span>
+          </div>
+        </div>
+        <div class="visual" aria-label="Students sharing a ride">
+          <div class="visual-bg"></div>
+          <div class="visual-image"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Friends enjoying time together outdoors" fetchpriority="high"></div>
+          <div class="float-card people">
+            <span class="float-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <span><strong>Made for campus</strong><small>Ride with your community</small></span>
+          </div>
+          <div class="float-card trip">
+            <span class="float-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14l1.5-6.5a2 2 0 0 0-2-2.5H5.5a2 2 0 0 0-2 2.5L5 17Z"/><path d="M6 17v2m12-2v2M4 13h16"/></svg></span>
+            <span><strong>One less empty seat</strong><small>More savings, less traffic</small></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="search-section wrap" id="search" aria-label="Find a campus ride">
+      <form class="search-card" id="search-form">
+        <div class="search-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="3"/><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/></svg>
+          <div class="field-content"><label for="from">Leaving from</label><input id="from" name="from" placeholder="Your starting point" autocomplete="off"></div>
+        </div>
+        <div class="search-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <div class="field-content"><label for="to">Going to</label><input id="to" name="to" placeholder="Where do you want to go?" autocomplete="off"></div>
+        </div>
+        <div class="search-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
+          <div class="field-content"><label for="date">When</label><input id="date" name="date" type="date" aria-label="Travel date"></div>
+        </div>
+        <button class="button" type="submit"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg> Search rides</button>
+      </form>
+    </section>
+
+    <section class="section wrap" id="rides">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Hop in, head out</span>
+          <h2>Rides happening soon</h2>
+          <p>Good people are already going your way.</p>
+        </div>
+        <a class="view-all" href="#search">See all rides <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="ride-grid" id="ride-list">
+        <article class="ride-card" data-from="north campus" data-to="central station" data-day="today">
+          <div class="ride-top"><span class="ride-date">TODAY · 4:30 PM</span><span class="seats">2 seats left</span></div>
+          <div class="route"><div class="route-dots"><span class="route-dot"></span><span class="route-line"></span><span class="route-dot end"></span></div><div class="route-places"><strong>North Campus</strong><strong>Central Station</strong></div><div class="route-times"><span>4:30 PM</span><span>4:55 PM</span></div></div>
+          <div class="ride-footer"><div class="driver"><span class="driver-avatar">👩🏻</span><span><strong>Maya R.</strong><small>⭐ 4.9 · 12 rides</small></span></div><div class="price">$3<small>per seat</small></div></div>
+        </article>
+        <article class="ride-card" data-from="main campus" data-to="riverside mall" data-day="today">
+          <div class="ride-top"><span class="ride-date">TODAY · 5:15 PM</span><span class="seats">1 seat left</span></div>
+          <div class="route"><div class="route-dots"><span class="route-dot"></span><span class="route-line"></span><span class="route-dot end"></span></div><div class="route-places"><strong>Main Campus</strong><strong>Riverside Mall</strong></div><div class="route-times"><span>5:15 PM</span><span>5:35 PM</span></div></div>
+          <div class="ride-footer"><div class="driver"><span class="driver-avatar" style="background:#c9d6b7">👨🏽</span><span><strong>Jordan K.</strong><small>⭐ 5.0 · 8 rides</small></span></div><div class="price">$2<small>per seat</small></div></div>
+        </article>
+        <article class="ride-card" data-from="east campus" data-to="airport" data-day="tomorrow">
+          <div class="ride-top"><span class="ride-date">TOMORROW · 8:00 AM</span><span class="seats">3 seats left</span></div>
+          <div class="route"><div class="route-dots"><span class="route-dot"></span><span class="route-line"></span><span class="route-dot end"></span></div><div class="route-places"><strong>East Campus</strong><strong>City Airport</strong></div><div class="route-times"><span>8:00 AM</span><span>8:45 AM</span></div></div>
+          <div class="ride-footer"><div class="driver"><span class="driver-avatar" style="background:#d6c6df">👩🏾</span><span><strong>Amara T.</strong><small>⭐ 4.8 · 15 rides</small></span></div><div class="price">$8<small>per seat</small></div></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="benefits" id="how-it-works">
+      <div class="wrap">
+        <div class="benefits-head">
+          <span class="section-kicker">A smarter way to get there</span>
+          <h2>Campus is better together</h2>
+          <p>Skip the wait, share the ride. CampusRide connects students already heading in the same direction.</p>
+        </div>
+        <div class="benefit-grid">
+          <article class="benefit">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <h3>Get there on your time</h3><p>Find rides that fit your schedule, whether it's across campus or across town.</p>
+          </article>
+          <article class="benefit">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+            <h3>Make every trip count</h3><p>Split the fuel cost with your ride buddies and save a little along the way.</p>
+          </article>
+          <article class="benefit">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <h3>Meet your kind of people</h3><p>Ride with fellow students and make the campus community feel closer.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="community">
+      <div class="wrap">
+        <div class="cta-box">
+          <div><h2>Got an extra seat? Make someone's day.</h2><p>Share your route, split the cost, and meet a new ride buddy.</p></div>
+          <button class="button button-lime" type="button" data-open-offer>Offer your first ride <span aria-hidden="true">→</span></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <a class="brand" href="#"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14l1.5-6.5a2 2 0 0 0-2-2.5H5.5a2 2 0 0 0-2 2.5L5 17Z"/><path d="M6 17v2m12-2v2M4 13h16M7 8l1-3h8l1 3"/></svg></span>CampusRide</a>
+      <span class="footer-note">Made for campus, powered by community. © 2025 CampusRide</span>
+      <div class="footer-links"><a href="#how-it-works">About</a><a href="mailto:hello@campusride.example">Contact</a><a href="#community">Safety</a></div>
+    </div>
+  </footer>
+
+  <dialog id="offer-dialog" aria-labelledby="dialog-title">
+    <div class="modal">
+      <div class="modal-head">
+        <div><h2 id="dialog-title">Offer a ride</h2><p>Let your campus community ride along.</p></div>
+        <button class="close-modal" type="button" aria-label="Close dialog">✕</button>
+      </div>
+      <form class="modal-form" id="offer-form">
+        <div><label for="offer-from">Leaving from</label><input id="offer-from" name="offer-from" placeholder="e.g. North Campus" required></div>
+        <div><label for="offer-to">Going to</label><input id="offer-to" name="offer-to" placeholder="e.g. Central Station" required></div>
+        <div><label for="offer-date">Date</label><input id="offer-date" name="offer-date" type="date" required></div>
+        <div><label for="offer-time">Departure time</label><input id="offer-time" name="offer-time" type="time" required></div>
+        <div><label for="offer-seats">Available seats</label><input id="offer-seats" name="offer-seats" type="number" min="1" max="8" placeholder="2" required></div>
+        <div><label for="offer-price">Cost per seat ($)</label><input id="offer-price" name="offer-price" type="number" min="0" step="0.50" placeholder="3" required></div>
+        <div class="full"><button class="button" type="submit">Post your ride <span aria-hidden="true">→</span></button></div>
+      </form>
+    </div>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const dialog = document.querySelector("#offer-dialog");
+    const toast = document.querySelector("#toast");
+    const rideList = document.querySelector("#ride-list");
+    let toastTimer;
+    const formatLocalDate = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    rideList.querySelectorAll(".ride-card[data-day]").forEach((card) => {
+      card.dataset.date = formatLocalDate(card.dataset.day === "today" ? today : tomorrow);
+    });
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 3600);
+    }
+
+    document.querySelectorAll("[data-open-offer]").forEach((button) => {
+      button.addEventListener("click", () => dialog.showModal());
+    });
+    document.querySelector(".close-modal").addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    document.querySelector("#search-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const from = document.querySelector("#from").value.trim().toLowerCase();
+      const to = document.querySelector("#to").value.trim().toLowerCase();
+      const date = document.querySelector("#date").value;
+      const cards = [...rideList.querySelectorAll(".ride-card")];
+      cards.forEach((card) => {
+        card.hidden = !((!from || card.dataset.from.includes(from)) && (!to || card.dataset.to.includes(to)) && (!date || card.dataset.date === date));
+      });
+      rideList.querySelector(".no-results")?.remove();
+      if (!cards.some((card) => !card.hidden)) {
+        rideList.insertAdjacentHTML("beforeend", '<div class="no-results">No rides match that route just yet. Try another destination or offer a ride for your fellow students.</div>');
+      }
+      document.querySelector("#rides").scrollIntoView({ behavior: "smooth" });
+    });
+
+    document.querySelector("#offer-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const from = data.get("offer-from").trim();
+      const to = data.get("offer-to").trim();
+      const seats = Number(data.get("offer-seats"));
+      const price = Number(data.get("offer-price"));
+      const departure = new Date(`${data.get("offer-date")}T${data.get("offer-time")}`);
+      const dateLabel = departure.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }).toUpperCase();
+      const timeLabel = departure.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+      const card = document.createElement("article");
+      card.className = "ride-card";
+      card.dataset.from = from.toLowerCase();
+      card.dataset.to = to.toLowerCase();
+      card.dataset.date = data.get("offer-date");
+      card.innerHTML = `<div class="ride-top"><span class="ride-date">${dateLabel} · ${timeLabel}</span><span class="seats">${seats} ${seats === 1 ? "seat" : "seats"} left</span></div>
+        <div class="route"><div class="route-dots"><span class="route-dot"></span><span class="route-line"></span><span class="route-dot end"></span></div><div class="route-places"><strong></strong><strong></strong></div><div class="route-times"><span></span><span></span></div></div>
+        <div class="ride-footer"><div class="driver"><span class="driver-avatar">🧑‍🎓</span><span><strong>Your ride</strong><small>Just posted</small></span></div><div class="price">$${price}<small>per seat</small></div></div>`;
+      card.querySelectorAll(".route-places strong")[0].textContent = from;
+      card.querySelectorAll(".route-places strong")[1].textContent = to;
+      card.querySelectorAll(".route-times span")[0].textContent = timeLabel;
+      card.querySelectorAll(".route-times span")[1].textContent = "Ride shared";
+      rideList.querySelector(".no-results")?.remove();
+      rideList.prepend(card);
+      rideList.querySelectorAll(".ride-card").forEach((ride) => ride.hidden = false);
+      form.reset();
+      dialog.close();
+      showToast("Your ride is posted! It’s now visible to your campus community.");
+      document.querySelector("#rides").scrollIntoView({ behavior: "smooth" });
+    });
+
+    document.querySelector("#date").min = formatLocalDate(today);
+    document.querySelector("#offer-date").min = formatLocalDate(today);
+  </script>
+</body>
+</html>
